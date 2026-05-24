@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital IT Institute - Premium Learning & Tools</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['Fira Code', 'monospace'] },
+                    colors: { 
+                        brandDark: '#0f172a', 
+                        brandCard: '#1e293b', 
+                        brandPrimary: '#10b981', 
+                        brandSecondary: '#3b82f6' 
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Corporate Animations */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .text-gradient { background-size: 200% auto; animation: gradientShift 5s ease infinite; }
+        
+        /* Modern Glassmorphism Cards */
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .glass-card:hover { transform: translateY(-5px); border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(16, 185, 129, 0.15); }
+        
+        /* Tool Grid Specific Hover */
+        .tool-card:hover i:not(.ph-lock-key) { transform: scale(1.1); color: #10b981; }
+        .tool-card i { transition: all 0.3s ease; }
+
+        /* Scroller */
+        .notice-container { width: 100%; overflow: hidden; white-space: nowrap; box-sizing: border-box; }
+        .notice-text { display: inline-block; padding-left: 100%; animation: notice-scroll 35s linear infinite; }
+        @keyframes notice-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+        
+        /* Background Glows */
+        .glow-bg-1 { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(15,23,42,0) 70%); top: -10%; left: -10%; z-index: 0; pointer-events: none; }
+        .glow-bg-2 { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(15,23,42,0) 70%); bottom: -20%; right: -10%; z-index: 0; pointer-events: none; }
+        
+        /* Lock Icon Hover */
+        .ph-lock-key { transition: 0.3s; }
+        .group:hover .ph-lock-key { color: #ef4444; transform: scale(1.2); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        /* Payment UI */
+        .pay-radio-box { border: 1px solid rgba(255,255,255,0.1); background: #1e293b; border-radius: 12px; cursor: pointer; transition: all 0.3s; overflow: hidden; }
+        .pay-radio-box.active { border-color: #10b981; background: #0f172a; }
+        .pay-radio-header { padding: 16px; display: flex; align-items: center; gap: 12px; }
+        .pay-radio-circle { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #64748b; flex-shrink: 0; display: flex; align-items: center; justify-content: center;}
+        .pay-radio-box.active .pay-radio-circle { border-color: #10b981; }
+        .pay-radio-box.active .pay-radio-circle::after { content: ''; width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
+        .pay-details { display: none; padding: 16px; border-top: 1px solid rgba(255,255,255,0.05); background: #0f172a; }
+        .pay-radio-box.active .pay-details { display: block; animation: fadeIn 0.3s; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative">
+
+    <div class="glow-bg-1"></div>
+    <div class="glow-bg-2"></div>
+
+    <nav class="fixed top-0 w-full z-50 bg-[#0f172a]/90 backdrop-blur-md border-b border-slate-800 px-4 md:px-8 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.reload()">
+            <div class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-emerald-500 to-blue-600 rounded-xl shadow-md">
+                <i class="ph-bold ph-code text-white text-xl"></i>
+            </div>
+            <span class="text-xl md:text-2xl font-extrabold tracking-tight text-white">
+                Digital IT <span class="text-emerald-400">Institute</span>
+            </span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="navAuthBtn" onclick="openAuthModal()" class="px-5 py-2.5 rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition text-sm font-bold shadow-md">
+                Login / Register
+            </button>
+        </div>
+    </nav>
+
+    <div id="noticeBarContainer" class="fixed top-[72px] md:top-[72px] left-0 w-full h-[40px] bg-blue-600 border-b border-white/10 text-white text-[12px] md:text-sm font-bold flex items-center z-[40] shadow-md transition-colors duration-500">
+        <div class="notice-container">
+            <div class="notice-text" id="dynamicNotice">Welcome to Digital IT Institute! Enroll in our premium courses to unlock lifetime access to professional automation tools.</div>
+        </div>
+    </div>
+
+    <div class="flex-grow pt-[130px] pb-12 w-full relative z-10">
+        
+        <div id="home-section" class="px-4 md:px-6 max-w-7xl mx-auto block animate-fade-up">
+            
+            <header class="pt-10 pb-16 text-center max-w-4xl mx-auto">
+                <span class="inline-block px-5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase mb-6 tracking-widest shadow-inner">Master Your Digital Skills</span>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 text-white leading-tight">
+                    Professional IT Courses & <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500 text-gradient">Exclusive Web Tools</span>
+                </h1>
+                <p class="text-sm md:text-lg text-slate-400 mb-10 font-medium">Elevate your career with industry-leading courses and get unrestricted access to our premium suite of automation and marketing tools.</p>
+                <button onclick="document.getElementById('course-packages').scrollIntoView({behavior:'smooth'})" class="px-8 py-4 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-400 transition shadow-[0_10px_30px_rgba(16,185,129,0.3)] mx-auto flex items-center gap-2">
+                    <i class="ph-bold ph-rocket-launch text-xl"></i> Explore Course Bundles
+                </button>
+            </header>
+
+            <section id="course-packages" class="py-16 relative border-t border-slate-800">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-extrabold mb-3 text-white">Our Premium Learning Modules</h2>
+                    <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">Free access to all tools included with any package</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-card flex flex-col p-6 group">
+                        <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-3xl mb-6"><i class="ph-fill ph-megaphone"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-2">Digital Marketing Foundation</h3>
+                        <div class="flex items-baseline gap-2 mb-6"><span class="text-3xl font-black text-white">2,000 BDT</span></div>
+                        <ul class="text-[13px] text-slate-300 space-y-3 mb-8 flex-1 font-medium">
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Complete SEO Guidelines</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Social Media Marketing</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Free Access to All Web Tools</li>
+                            <li class="flex gap-2 items-start text-slate-500"><i class="ph-bold ph-clock text-slate-500 text-lg mt-0.5"></i> 1 Month Tool Access</li>
+                        </ul>
+                        <button onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')" class="w-full py-3.5 bg-slate-800 text-white font-bold rounded-xl border border-slate-700 group-hover:bg-blue-600 group-hover:border-blue-500 transition">Enroll Now</button>
+                    </div>
+
+                    <div class="glass-card flex flex-col p-6 group border-blue-500/50 relative">
+                        <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
+                        <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-3xl mb-6"><i class="ph-fill ph-code"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-2">Web Development Masterclass</h3>
+                        <div class="flex items-baseline gap-2 mb-6"><span class="text-3xl font-black text-white">4,000 BDT</span></div>
+                        <ul class="text-[13px] text-slate-300 space-y-3 mb-8 flex-1 font-medium">
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Frontend Design (HTML/CSS)</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> JavaScript & Frameworks</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Free Access to All Web Tools</li>
+                            <li class="flex gap-2 items-start text-slate-500"><i class="ph-bold ph-clock text-slate-500 text-lg mt-0.5"></i> 3 Months Tool Access</li>
+                        </ul>
+                        <button onclick="handleHomeClick('Web Development Masterclass|4000 BDT')" class="w-full py-3.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 transition shadow-[0_0_15px_rgba(16,185,129,0.3)]">Enroll Now</button>
+                    </div>
+
+                    <div class="glass-card flex flex-col p-6 group">
+                        <div class="w-14 h-14 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center text-3xl mb-6"><i class="ph-fill ph-trend-up"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-2">SEO & Affiliate Expert</h3>
+                        <div class="flex items-baseline gap-2 mb-6"><span class="text-3xl font-black text-white">5,000 BDT</span></div>
+                        <ul class="text-[13px] text-slate-300 space-y-3 mb-8 flex-1 font-medium">
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Advanced Link Building</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> High-Converting Strategies</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Free Access to All Web Tools</li>
+                            <li class="flex gap-2 items-start text-slate-500"><i class="ph-bold ph-clock text-slate-500 text-lg mt-0.5"></i> 6 Months Tool Access</li>
+                        </ul>
+                        <button onclick="handleHomeClick('SEO & Affiliate Expert|5000 BDT')" class="w-full py-3.5 bg-slate-800 text-white font-bold rounded-xl border border-slate-700 group-hover:bg-purple-600 group-hover:border-purple-500 transition">Enroll Now</button>
+                    </div>
+
+                    <div class="glass-card flex flex-col p-6 group">
+                        <div class="w-14 h-14 bg-orange-500/20 text-orange-400 rounded-xl flex items-center justify-center text-3xl mb-6"><i class="ph-fill ph-crown"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-2">Graphic Design Bootcamp</h3>
+                        <div class="flex items-baseline gap-2 mb-6"><span class="text-3xl font-black text-white">8,000 BDT</span></div>
+                        <ul class="text-[13px] text-slate-300 space-y-3 mb-8 flex-1 font-medium">
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Photoshop & Illustrator</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> UI/UX Design Fundamentals</li>
+                            <li class="flex gap-2 items-start"><i class="ph-bold ph-check text-emerald-400 text-lg mt-0.5"></i> Free Access to All Web Tools</li>
+                            <li class="flex gap-2 items-start text-emerald-400"><i class="ph-bold ph-infinity text-emerald-400 text-lg mt-0.5"></i> Lifetime Tool Access</li>
+                        </ul>
+                        <button onclick="handleHomeClick('Graphic Design Bootcamp|8000 BDT')" class="w-full py-3.5 bg-slate-800 text-white font-bold rounded-xl border border-slate-700 group-hover:bg-orange-600 group-hover:border-orange-500 transition">Enroll Now</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="public-tools" class="py-16 relative border-t border-slate-800">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-extrabold mb-3 text-white">Included Premium Tools</h2>
+                    <p class="text-slate-400 text-sm font-medium">Unlock these powerful automation tools automatically upon enrollment.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')">
+                        <i class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-mask-happy text-5xl text-emerald-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Useragent Generator</h4>
+                        <p class="text-xs text-slate-400">Generate 100% unique stealth user agents.</p>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')">
+                        <i class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-envelope-open text-5xl text-blue-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Bulk Email Generator</h4>
+                        <p class="text-xs text-slate-400">Create thousands of realistic identities.</p>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')">
+                        <i class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-shield-check text-5xl text-purple-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Real Email Checker</h4>
+                        <p class="text-xs text-slate-400">Validate MX records instantly.</p>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')">
+                        <i class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-globe text-5xl text-orange-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Best Affiliate Networks</h4>
+                        <p class="text-xs text-slate-400">Curated list of high-paying platforms.</p>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')">
+                        <i class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-map-pin text-5xl text-pink-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Global Address Gen</h4>
+                        <p class="text-xs text-slate-400">Accurate residential data for profiles.</p>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="handleHomeClick('Digital Marketing Foundation|2000 BDT')">
+                        <i class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-rocket text-5xl text-yellow-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Upcoming Modules</h4>
+                        <p class="text-xs text-slate-400">Constant updates with lifetime value.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div> <div id="dashboard-section" class="hidden px-4 md:px-8 w-full max-w-[1400px] mx-auto animate-fade-up">
+            
+            <div class="w-full glass-card border border-emerald-500/30 mb-8 p-6 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative">
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none"></div>
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Student Workspace</h2>
+                    <div class="flex items-center gap-3 mt-2">
+                        <span class="flex h-3 w-3 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span>
+                        <p class="text-slate-300 font-medium text-sm">Welcome back, <span id="dashUserName" class="text-emerald-400 font-bold">Student</span></p>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex flex-col gap-3 min-w-[300px] md:min-w-[350px] shadow-inner relative z-10">
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Active Plan: <span id="dashPlanName" class="text-emerald-400">Loading...</span></p>
+                    
+                    <div class="flex items-center justify-start gap-4 text-center hidden" id="countdownTimer"></div>
+                    
+                    <div id="vipCodeBox" class="mt-1 block">
+                        <div class="flex gap-2">
+                            <input type="text" id="dashVipInput" placeholder="Enter VIP Key Here" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-sm outline-none uppercase focus:border-emerald-500 transition">
+                            <button onclick="applyVipFromDash()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-bold text-sm transition shadow-md whitespace-nowrap">Unlock</button>
+                        </div>
+                        <button onclick="openPaymentModal()" class="w-full mt-3 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg border border-slate-700 transition">Purchase a Course Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold mb-6 text-white flex items-center gap-2"><i class="ph-bold ph-wrench text-emerald-400 text-2xl"></i> Premium Tool Access</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="checkAccess('useragent-generator.html')">
+                        <i id="lock_ua" class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-mask-happy text-5xl text-emerald-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Useragent Generator</h4>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="checkAccess('email-generator.html')">
+                        <i id="lock_email" class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-envelope-open text-5xl text-blue-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Email Generator</h4>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="checkAccess('email-checker.html')">
+                        <i id="lock_validator" class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-shield-check text-5xl text-purple-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Real Email Checker</h4>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="checkAccess('cpa-networks.html')">
+                        <i id="lock_cpa" class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-globe text-5xl text-orange-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Top CPA Networks</h4>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="checkAccess('proxy-lists.html')">
+                        <i id="lock_proxy" class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-tree-structure text-5xl text-pink-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Premium Proxy Lists</h4>
+                    </div>
+                    <div class="glass-card tool-card p-8 flex flex-col items-start gap-4 cursor-pointer group" onclick="checkAccess('address-number.html')">
+                        <i id="lock_address" class="ph-fill ph-lock-key absolute top-5 right-5 text-slate-600 group-hover:text-red-500 transition text-xl z-10"></i>
+                        <i class="ph-fill ph-map-pin text-5xl text-yellow-400"></i>
+                        <h4 class="text-lg font-bold text-white mt-2">Real Address Generator</h4>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-slate-500 text-sm font-medium mt-auto z-50 relative">
+        <p> © 2026 Digital IT Institute. All Rights Reserved. Empowering Professionals.</p>
+    </footer>
+
+    <div id="authModal" class="hidden fixed inset-0 z-[99999] flex items-center justify-center bg-slate-900/95 backdrop-blur-md p-4 transition-opacity">
+        <div class="relative w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+            <div class="flex border-b border-slate-700 bg-slate-900 relative">
+                <button onclick="switchTab('login')" id="tabLogin" class="flex-1 py-4 text-sm font-bold text-emerald-400 border-b-2 border-emerald-500 bg-slate-800 transition">Sign In</button>
+                <button onclick="switchTab('register')" id="tabRegister" class="flex-1 py-4 text-sm font-bold text-slate-400 hover:text-white transition relative">
+                    Create Account
+                    <span onclick="closeAuthModal(); event.stopPropagation();" class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-slate-700 hover:bg-red-500 text-slate-300 hover:text-white rounded-full transition"><i class="ph-bold ph-x text-sm"></i></span>
+                </button>
+            </div>
+            <form id="loginForm" class="p-8 space-y-5" onsubmit="handleAuth(event, 'login')">
+                <div class="text-center mb-4">
+                    <h3 class="text-2xl font-bold text-white">Welcome Back</h3>
+                    <p class="text-xs text-slate-400 mt-1">Sign in to access your workspace.</p>
+                </div>
+                <input type="email" name="email" placeholder="Email Address" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white outline-none focus:border-emerald-500 transition">
+                <div class="relative"><input type="password" id="loginPass" name="password" placeholder="Password" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white outline-none focus:border-emerald-500 transition"><i class="ph-bold ph-eye absolute top-3.5 right-4 text-slate-400 cursor-pointer hover:text-white" onclick="togglePassword('loginPass', this)"></i></div>
+                <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow-lg transition transform hover:-translate-y-0.5">Secure Login</button>
+            </form>
+            <form id="registerForm" class="hidden p-8 space-y-4 max-h-[85vh] overflow-y-auto" onsubmit="handleAuth(event, 'register')">
+                <div class="text-center mb-4">
+                    <h3 class="text-2xl font-bold text-white">Join Us</h3>
+                </div>
+                <input type="text" name="name" placeholder="Full Name" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-blue-500">
+                <input type="text" name="phone" placeholder="Phone Number" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-blue-500">
+                <input type="email" name="email" placeholder="Email Address" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-blue-500">
+                <div class="relative"><input type="password" id="regPass" name="password" placeholder="Create Password" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-blue-500"><i class="ph-bold ph-eye absolute top-3.5 right-4 text-slate-400 cursor-pointer hover:text-white" onclick="togglePassword('regPass', this)"></i></div>
+                <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow-lg mt-2 transition transform hover:-translate-y-0.5">Register Now</button>
+            </form>
+            <div id="authMessage" class="px-8 pb-6 text-center text-sm font-bold hidden animate-pulse bg-slate-900 pt-4 border-t border-slate-800"></div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="hidden fixed inset-0 z-[99999] flex items-center justify-center bg-slate-900/95 backdrop-blur-xl p-4 m-0 overflow-y-auto">
+        <div class="relative w-full max-w-lg bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl my-8">
+            
+            <div class="flex justify-between items-center p-5 border-b border-slate-700 bg-slate-900 rounded-t-2xl">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="ph-fill ph-credit-card text-emerald-500 text-xl"></i> Complete Enrollment</h3>
+                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white hover:bg-red-500 w-8 h-8 rounded-full flex items-center justify-center transition border border-slate-700"><i class="ph-bold ph-x"></i></button>
+            </div>
+
+            <div id="payFormArea" class="p-6">
+                <div class="mb-6">
+                    <label class="text-xs text-slate-400 font-bold block mb-2 uppercase tracking-wider">1. Select Package</label>
+                    <select id="modalPackageSelect" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-lg text-white font-bold outline-none focus:border-emerald-500 transition cursor-pointer" onchange="updateModalPrice()">
+                        <option value="Digital Marketing Foundation|2000 BDT">Digital Marketing Foundation</option>
+                        <option value="Web Development Masterclass|4000 BDT">Web Development Masterclass</option>
+                        <option value="SEO & Affiliate Expert|5000 BDT">SEO & Affiliate Expert</option>
+                        <option value="Graphic Design Bootcamp|8000 BDT">Graphic Design Bootcamp</option>
+                    </select>
+                </div>
+
+                <div class="bg-emerald-900/20 p-4 rounded-xl border border-emerald-500/30 mb-6 text-center">
+                    <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider block mb-1">Total Payable Amount</span>
+                    <span id="modalPayAmount" class="text-2xl font-mono font-black text-white">2000 BDT</span>
+                </div>
+
+                <label class="text-xs text-slate-400 font-bold block mb-3 uppercase tracking-wider">2. Payment Method</label>
+                <div class="space-y-3">
+                    <div class="pay-radio-box" onclick="selectPayment('mobile')">
+                        <div class="pay-radio-header"><div class="pay-radio-circle" id="circle_mobile"></div><span class="text-white font-bold flex-grow text-sm">Mobile Banking (bKash/Nagad/Rocket)</span></div>
+                        <div class="pay-details" id="detail_mobile">
+                            <p class="text-sm text-slate-300 mb-4">Send money to our official merchant number, then enter the details below.</p>
+                            <div class="mb-4"><label class="text-xs text-slate-400 font-bold block mb-1">Official Number :</label><input type="text" value="01780103303" readonly class="w-full bg-slate-900 border border-slate-700 p-3 rounded text-emerald-400 font-mono font-bold outline-none text-center"></div>
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div><label class="text-xs text-slate-400 font-bold block mb-1">Sender Number</label><input type="text" id="payNum" placeholder="017XXXXXXXX" class="w-full bg-slate-900 border border-slate-700 p-3 rounded text-white outline-none focus:border-emerald-500 text-sm"></div>
+                                <div><label class="text-xs text-slate-400 font-bold block mb-1">Transaction ID</label><input type="text" id="payTrx" placeholder="TxnID..." class="w-full bg-slate-900 border border-slate-700 p-3 rounded text-white outline-none focus:border-emerald-500 uppercase text-sm"></div>
+                            </div>
+                            <button onclick="submitPaymentForm()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition shadow-md">Verify Payment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="paySuccessArea" class="hidden p-8 text-center">
+                <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30"><i class="ph-fill ph-check-circle text-5xl text-emerald-400"></i></div>
+                <h3 class="text-2xl font-bold text-white mb-2">Request Sent!</h3>
+                <p class="text-emerald-400 text-sm mb-6 bg-emerald-900/20 p-4 rounded-xl border border-emerald-700/30 font-medium">To get fast access, please send your payment screenshot on Telegram to receive your VIP code.</p>
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                    <label class="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-2 text-left">Enter VIP Key Here</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="modalVipInput" placeholder="XXXX-XXXX-XXXX" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white font-mono text-center outline-none uppercase focus:border-blue-500 transition">
+                        <button onclick="applyVipFromModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-3 rounded-lg font-bold transition shadow-md">Apply</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
