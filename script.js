@@ -4,7 +4,7 @@
 
 const CONFIG = {
     // Replace with your actual Google Apps Script URL
-    backendURL: "https://script.google.com/macros/s/AKfycbwv49zfBOFTbmoamPIUqNcnjkB4s1RdGWXuBzQLTIJd3_b7ls3ociGJ3MbkxRACa8S7DQ/exec"
+    backendURL: "https://script.google.com/macros/s/AKfycbxmzAtBIP-1HKTao33dPpKUYe5WYwBjZxUA0WrRhdjzZ_J_wCHfXSic2vhHqMF0eARG/exec"
 };
 
 let isLoggedIn = false;
